@@ -23,7 +23,7 @@ export default class StartupScreen extends React.Component {
                     placeholderTextColor= '#ffffff'
                     secureTextEntry = {true}
             />
-      <RoundedButton title="Go to login screen" onPress={() => navigate('Login', {})}>
+      <RoundedButton title="Go to questionnaire screen" onPress={() => navigate('Questionnaire', {})}>
           Login
       </RoundedButton>
       <RoundedButton title="Go to signup screen" onPress={() => navigate('Signup', {})}>
