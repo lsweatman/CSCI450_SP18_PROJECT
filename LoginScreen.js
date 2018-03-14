@@ -18,7 +18,7 @@ export default class LoginScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#84C9E0',
     alignItems: 'center',
     justifyContent: 'center',
   },
