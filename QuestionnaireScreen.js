@@ -1,98 +1,87 @@
 import React from 'react'
-import {StyleSheet, Text, View, Modal, Picker} from 'react-native'
+import {StyleSheet, Text, View, Modal, Picker, Alert} from 'react-native'
 import RoundedButton from './App/Components/RoundedButton'
 import FullButton from './App/Components/FullButton'
 import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button';
 
+import * as firebase from 'firebase';
 
-var Question_1 = [
-  {label: 'Consistent motivation', value: 0 },
-  {label: 'Finding peace', value: 1 },
-  {label: 'Being involved in community', value: 2 },
-  {label: 'Health habits', value: 3 },
-  {label: 'Balancing time with electronics and life', value: 4 },
-  {label: 'Money management', value: 5 }
-];
+import {questions} from './questions.js';
+import {options} from './questions.js';
 
-var Question_2 = [
-  {label: 'Administration (organizing things)', value: 0 },
-  {label: 'Hospitality', value: 1 },
-  {label: 'Outreach', value: 2 },
-  {label: 'Evangelism', value: 3 },
-  {label: 'Teaching', value: 4 }
-];
+const firebaseConfig = {
+  apiKey: "AIzaSyAJXp7SBUPGRTPo-5qYM-T78mP8DEuBsog",
+  authDomain: "commune-265d9.firebaseapp.com",
+  databaseURL: "https://commune-265d9.firebaseio.com",
+  projectId: "commune-265d9",
+  storageBucket: "commune-265d9.appspot.com",
+  messagingSenderId: "697540841037"
+};
 
-var Question_3 = [
-  {label: 'Gentleness', value: 0 },
-  {label: 'Wisdom', value: 1 },
-  {label: 'Faithful Serving', value: 2 },
-  {label: 'Recognizing faults and encouraging change', value: 3 },
-  {label: 'Evangelism', value: 4 },
-  {label: 'Good life decisions', value: 5 }
-];
 
-var Question_4 = [
-  {label: 'Leader', value: 0 },
-  {label: 'Prayer Warrior', value: 1 },
-  {label: 'Normal Member', value: 2 },
-  {label: 'Relational Member', value: 3 }
-];
 
-// var RadioButtonProject = React.createClass({
-//   getInitialState: function() {
-//     return {
-//       value: 0,
-//     }
-//   },
 
+
+
+
+var i;
+i = 0;
 
 export default class QuestionnaireScreen extends React.Component {
+
+    //submit button will set hasTakeQuiz to true, then navigate back home
+    submit(userId) {
+      var userId = firebase.auth().currentUser.uid;
+      console.log("setting hasTakenQuiz to true");
+      
+      firebase.database().ref('users/' + userId).set({
+        hasTakenQuiz: true
+      });
+    this.props.navigation.navigate('Home', {});
+    }
+    
+
+
   render() {
+    
+    var {navigate} = this.props.navigation;
     return (
       <View style={styles.container}>
-<Text style= {styles.question}> Which of these habits do you struggle with the most? </Text>
+      
+        
+        {i < questions.length ? 
+        <Text style={styles.question}>Question {1 + i} </Text>:            //if true
+        <Text style = {styles.question}> Thank you for answering! </Text>  //if false
+        }
 
-      <RadioForm style = {styles.radio}
-                radio_props={Question_1}
+        <Text style={styles.question}>{ questions[i] } </Text>
+        
+
+        <RadioForm style = {styles.radio}
+                radio_props={options[i]}
                 initial={0}
                 buttonColor={'#84C9E0'}
                 animation={true}
                 onPress={(value) => {this.setState({value:value})}}
-              />
+        />
 
-<Text style= {styles.question}> What serving opportunities do you feel have helped you grow? </Text>
+        
 
-      <RadioForm style = {styles.radio}
-                radio_props={Question_2}
-                initial={0}
-                buttonColor={'#84C9E0'}
-                animation={true}
-                onPress={(value) => {this.setState({value:value})}}
-              />
-
-<Text style= {styles.question}> Which of these do you think is your top quality? </Text>
-
-      <RadioForm style = {styles.radio}
-               radio_props={Question_3}
-               initial={0}
-               buttonColor={'#84C9E0'}
-               animation={true}
-               onPress={(value) => {this.setState({value:value})}}
-              />
-
-<Text style= {styles.question}> Which role in a small group do you best fit?  </Text>
-
-      <RadioForm style = {styles.radio}
-               radio_props={Question_4}
-               initial={0}
-               buttonColor={'#84C9E0'}
-               animation={true}
-               onPress={(value) => {this.setState({value:value})}}
-              />
-
-        <RoundedButton onPress={this.toggleModal}>
-          Submit Answers
-        </RoundedButton>
+        {i < questions.length ? 
+          <Text style = {{color: 'white'}}>   
+          {i++}
+          </Text>:
+          <RoundedButton 
+          style = {{flex: 1 }}
+          onPress={i = 0}
+          onPress={() => {this.submit();}}
+          >
+            Submit
+          </RoundedButton >
+        }
+        
+        
+        
       </View>
     );
   }
@@ -100,13 +89,22 @@ export default class QuestionnaireScreen extends React.Component {
 
   const styles = StyleSheet.create({
     question: {
-    alignItems: 'flex-start',
-      justifyContent: 'flex-start',
-      fontSize: 25,
-    },
-    radio: {
+      
       alignItems: 'flex-start',
       justifyContent: 'flex-start',
-      margin: 10,
+      fontSize: 25,
+      padding: 10
+    },
+    radio: {
+      
+      alignItems: 'flex-start',
+      justifyContent: 'flex-start',
+      padding: 10
+    },
+    button:{
+      
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginLeft: 10
     }
   });
