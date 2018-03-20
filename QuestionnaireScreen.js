@@ -6,8 +6,9 @@ import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-
 
 import * as firebase from 'firebase';
 
-import {questions} from './questions.js';
-import {options} from './questions.js';
+//getting questions from file
+import {questions} from './App/Components/questions.js';
+import {options} from './App/Components/questions.js';
 
 const firebaseConfig = {
   apiKey: "AIzaSyAJXp7SBUPGRTPo-5qYM-T78mP8DEuBsog",
@@ -17,12 +18,6 @@ const firebaseConfig = {
   storageBucket: "commune-265d9.appspot.com",
   messagingSenderId: "697540841037"
 };
-
-
-
-
-
-
 
 var i;
 i = 0;
