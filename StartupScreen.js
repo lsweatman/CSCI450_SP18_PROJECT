@@ -94,7 +94,7 @@ export default class StartupScreen extends React.Component {
 
         <TextInput
           style={styles.textInput}
-          placeholder={'Username'}
+          placeholder={'Email'}
           placeholderTextColor= '#000000'
           onChangeText={(text) => {this.setState({userEmail: text}); }}
         />
