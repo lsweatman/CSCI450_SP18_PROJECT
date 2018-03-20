@@ -17,6 +17,9 @@ const firebaseConfig = {
 export default class StartupScreen extends React.Component {
   constructor() {
     super();
+    console.ignoredYellowBox = [
+      'Setting a timer'
+    ];
     if (!firebase.apps.length) { // Prevent more than one instance
       firebase.initializeApp(firebaseConfig);
     }
@@ -26,6 +29,7 @@ export default class StartupScreen extends React.Component {
       loading: true,
       userEmail: '',
       userPassword: '',
+      userHasTakenQuiz: false,
     };
   }
 
@@ -35,15 +39,50 @@ export default class StartupScreen extends React.Component {
         loading: false,
         user,
       });
-      console.log(user);
+
       if (this.state.user) { // User has been logged in
-        this.props.navigation.navigate('Login', {});
+        // Check if the user has anything data in firebase
+        var userId = firebase.auth().currentUser.uid;
+        this.checkQuizStatus(userId);
       }
     });
   }
 
   componentWillUnmount() {
     this.authSubscription();
+  }
+
+  checkQuizStatus(userId) {
+    firebase.database().ref('/users/' + userId).once('value').then((snapshot) => {
+      
+      if (snapshot.val() !== null) { // User has info already
+        if (snapshot.val().hasTakenQuiz === true) { // They have taken the quiz
+          // Props are inaccessible at this point for some reason
+          this.navigateLogin();
+        }
+        else { // They have not taken the quiz
+          this.navigateQuiz();
+        }
+      }
+      else { // User is brand new
+        // Set quiz flag
+        firebase.database().ref('users/' + userId).set({
+          hasTakenQuiz: false
+        });       
+        this.navigateQuiz();  
+      }
+    })
+    .catch(function(error) {
+      console.log(error);
+    });
+  }
+
+  navigateLogin() {
+    this.props.navigation.navigate('Login', {});
+  }
+
+  navigateQuiz() {
+    this.props.navigation.navigate('Questionnaire', {});
   }
 
   loginUser() {
