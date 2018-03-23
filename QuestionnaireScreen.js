@@ -11,21 +11,24 @@ import {questions} from './App/Components/questions.js';
 import {options} from './App/Components/questions.js';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAJXp7SBUPGRTPo-5qYM-T78mP8DEuBsog",
-  authDomain: "commune-265d9.firebaseapp.com",
-  databaseURL: "https://commune-265d9.firebaseio.com",
-  projectId: "commune-265d9",
-  storageBucket: "commune-265d9.appspot.com",
-  messagingSenderId: "697540841037"
+  apiKey: "AIzaSyBWWCdi84BofstOgOLE7xKsRvDeQxcyLqY",
+    authDomain: "testing-query.firebaseapp.com",
+    databaseURL: "https://testing-query.firebaseio.com",
+    projectId: "testing-query",
+    storageBucket: "testing-query.appspot.com",
+    messagingSenderId: "729415852786"
 };
+
+
 
 
 /*      known bugs:       */
 //When the back button is enabled in the navigator, it causes problems with the survey--remove the back option
 //from questionnaire screen?
-var i;
-
+var i
 i = 0;
+//new array to hold answers
+var answers = [];
 
 export default class QuestionnaireScreen extends React.Component {
 
@@ -39,27 +42,31 @@ export default class QuestionnaireScreen extends React.Component {
     }
   }
 
-    //submit button will update hasTakeQuiz to true, then navigate back home
+    //submit button will update hasTakeQuiz to true, send data to firebase from array, then navigate back home
     submit() {
       var userId = firebase.auth().currentUser.uid;
       console.log("setting hasTakenQuiz to true");
+      firebase.database().ref('users/' + userId).set({
+        answers
+      });
       firebase.database().ref('users/' + userId).update({
         hasTakenQuiz: true
       });
-      
-    this.props.navigation.navigate('Home', {});
+      this.props.navigation.navigate('Home', {});
     }
-    
-    //function will send the data to firebase in users/uid/answers/uniqueId/
-    //then will iterate to next question 
+  
     nextQuestion(){
+      //prevent empty option
+      if (this.state.value1 === -1)
+      {
+        Alert.alert('Uh-Oh!','Please choose an option before continuing!');
+        return;
+      }
       var userId = firebase.auth().currentUser.uid;
       i++;
       console.log(this.state.value1);
-      firebase.database().ref('users/' + userId + '/answers/').push({
-        answer: this.state.value1
-      });
-      //then will refresh page
+      //save answer for this question into answers array
+      answers.push(this.state.value1);
       this.props.navigation.navigate('Questionnaire', {});
     }
 
@@ -101,7 +108,6 @@ export default class QuestionnaireScreen extends React.Component {
         {i < questions.length ? 
           <RoundedButton
           style = {styles.button}
-            disabled = {true}
             onPress={()=>{this.nextQuestion()}}
           >
             Next
