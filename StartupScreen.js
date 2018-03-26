@@ -146,17 +146,17 @@ export default class StartupScreen extends React.Component {
           onChangeText={(text) => {this.setState({userPassword: text}); }}
         />
 
-      <RoundedButton onPress={() => {this.loginUser(navigate);}}>
-            Login
-      </RoundedButton>
+        <RoundedButton onPress={() => {this.loginUser(navigate);}}>
+              Login
+        </RoundedButton>
 
-      <RoundedButton onPress={() => {this.signupUser();}}>
-            Sign-Up
-      </RoundedButton>
+        <RoundedButton onPress={() => {this.signupUser();}}>
+              Sign-Up
+        </RoundedButton>
 
-      <RoundedButton onPress={() => {this.logoutUser();}}>
-            Logout
-      </RoundedButton>
+        <RoundedButton onPress={() => {this.logoutUser();}}>
+              Logout
+        </RoundedButton>
 
       </View>
     );
